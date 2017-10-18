@@ -69,11 +69,12 @@ public class RpcClient extends SimpleChannelInboundHandler<RpcResponse> {
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture future = bootstrap.connect(host, port).sync();
-            future.channel().writeAndFlush(request).sync();
-            
             Object obj = new Object();
             FUTURES.put(request.getRequestId(), obj);
+            
+            ChannelFuture future = bootstrap.connect(host, port).sync();
+            future.channel().writeAndFlush(request).sync();
+
             synchronized (obj) {
                 obj.wait(); // 未收到响应，使线程等待
             }
