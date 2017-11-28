@@ -2,7 +2,10 @@ package cn.edu.wj.netty.day1;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
+/**
+ * @author jwu
+ * netty参考: https://www.cnblogs.com/davidwang456/p/5032845.html
+ */
 public class DemoClientHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
