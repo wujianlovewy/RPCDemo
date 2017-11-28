@@ -31,12 +31,14 @@ public class DemoClient {
                      ChannelPipeline p = ch.pipeline();  
                      p.addLast("decoder", new StringDecoder());  
                      p.addLast("encoder", new StringEncoder());  
-                     p.addLast(new DemoClientHandler());  
+                     p.addLast(new DemoClientHandler(),new SimpleChannelClient(),new DemoClientHandler2());  
+                    
+                    
                  }  
              });  
   
             ChannelFuture future = b.connect(HOST, PORT).sync();  
-            future.channel().writeAndFlush("Hello Netty Server ,I am a common client");  
+            future.channel().writeAndFlush("Hello Netty Server ,I am a Demo client");  
             future.channel().closeFuture().sync();  
         } finally {  
             group.shutdownGracefully();  
