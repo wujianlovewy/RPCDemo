@@ -1,0 +1,73 @@
+三、 Dubbo消费者--提供者请求过程与响应过程： 
+a) 大致过程 
+i. 消费者发送请求提供者处理消费者接受请求 
+ii. 在提供者与消费者端都初始化完毕时，提供者对外暴露的是Expoter、消费者对外提供的是Proxy，接下来就是从Proxy的执行到Exporter执行的过程，其中Dubbo中的会话域Invocation承载着提供者与消费者端的消息传递，并在每个线程栈中使用。下面是大致处理逻辑： 
+----------------------------------1.消费者发起请求------------------------------------------- 
+1. testService.hello();//消费者端呈现层引用的远程服务，这其实就是个代理 
+2. testServiceSub.hello();//proxy代理被Sub包装了，增强Sub功能，类似AOP 
+3. testServiceProxy.hello();//消费者端Invoker代理 
+4. InvokerInvocationHandler.invoker();//由代理类执行的invocationHandler 
+5. MockClusterInvoker.invoke();//集群对集群Invoker进行的包装，Mock功能 
+6. ClusterInvoker.invoke();//执行集群伪装的Invoker 
+7. Directory.list();//查找伪装在集群后面的所有Invoker 
+8. Router.route();//通过路由规则策略从list中选择一些Invoker 
+9. LoadBalance.select();//通过负载均衡选策略选中一个Invoker执行 
+10. Filter.invoke();//执行所有消费者端Filter 
+11. Invoker.invoke();//执行消费者端的Invoker即DubboInvoker 
+12. HeaderExchangerClient.request();//信息交换Client执行请求，其中封装了NettyClient、HeaderExchangerChannel 
+13. HeaderExchangerChannel.request();//此类封装了NettyClient，信息交换通道创建Request执行请求，并创建DefaultFuture返回 
+14. NettyClient父类AbstractClient.send();//消费者端Client执行请求 
+15. NettyChannel.send();//Netty通道执行请求发送 
+16. Channel.write();//NIO框架通知执行写操作，并触发Handler 
+17. NettyHanlder.writeRequested();//执行NIO框架的顶级Handler 
+18. NettyCodecAdapter.encode();//执行NIO框架的编码逻辑，以下执行Handler 
+19. NettyClient父类AbstractPeer.send();//执行装饰了Handler的NettyCient 
+20. MultiMessageHandler.send();//多消息处理Handler 
+21. HeartbeatHandler.send();//心跳处理Handler 
+22. AllChannelHandler.send();//消息派发器Handler 
+23. DecodeHandler.send();//编码Handler 
+24. HeaderExchangerHandler.send();//信息交换Handler 
+25. requestHandler父类ChannelHandlerAdapter.send();//最后执行Handler，以上Handler的执行在消费者端是没有意义，因为Channel.write ()执行时，提供者端已经收到消息了，也正在处理了，详细逻辑后面再说，这里为了完整性才这样写（以上是消费者请求大致过程，下面是提供者接受请求后处理并响应消费者过程）。 
+------------------------------2.提供者处理并响应请求-------------------------------------- 
+26. NettyCodecAdapter.messageReceived();//提供者通过NIO框架通信并接受到消费者发送的信息，当然，这里屏蔽了所有NIO框架的逻辑，也屏蔽了所有编码解码与序列化反序列化的逻辑 
+27. NettyHandler.messageReceived();//提供者端的NIO顶级Handler处理 
+28. NettyServer.received();//NIO框架的Server接受请求信息 
+29. MultiMessageHandler.received ();//多消息处理Handler 
+30. HeartbeatHandler.received ();//心跳处理Handler 
+31. AllChannelHandler.received ();//消息派发器Handler 
+32. DecodeHandler.received ();//编码Handler 
+33. HeaderExchangerHandler.received ();//信息交换Handler，请求-响应模式 
+34. requestHandler.reply();//执行与Exporter交接的最初Handler 
+35. getInvoker();//先得到提供者端的Exporter再得到相应的提供者端Invoker 
+36. Filter.invoke();//执行所有提供者端的Filter，所有附加逻辑均由此完成 
+37. AbstractInvoker.invoke();//执行封装了服务实现类的原始Invoker 
+38. testServiceImple.hello();//执行服务实现类逻辑 
+39. NettyChannel.send();//HeaderExchangerHandler得到执行结果Response再返回给消费者，此代码由HeaderExchangerHandler发起 
+40. Channel.write ();//NIO框架通知执行写操作，并触发Handler 
+41. NettyHanlder.writeRequested();//执行NIO框架的顶级Handler 
+42. NettyCodecAdapter.encode();//执行NIO框架的编码逻辑，以下执行Handler 
+43. NettyServer父类AbstractPeer.send();//执行装饰了Handler的NettyServer 
+44. MultiMessageHandler.send();//多消息处理Handler 
+45. HeartbeatHandler.send();//心跳处理Handler 
+46. AllChannelHandler.send();//消息派发器Handler 
+47. DecodeHandler.send();//编码Handler 
+48. HeaderExchangerHandler.send();//信息交换Handler 
+49. requestHandler父类ChannelHandlerAdapter.send();//最后执行Handler，以上Handler的执行在提供者端也是是没有意义，因为Channel.write ()执行时，消费者端已经收到响应消息了，也正在处理了，详细逻辑后面再说，这里为了完整性才这样写（以上是消费者请求与提供者接受请求并响应大致过程，下面是消费者接受到提供者响应后处理过程）。 
+----------------------------------3.消费者接受响应------------------------------------------ 
+50. NettyCodecAdapter.messageReceived();//提供者通过NIO框架通信并接受提供者发送过来的响应 
+51. NettyHandler.messageReceived();//消费者端的NIO顶级Handler处理 
+52. NettyClient.received();//NIO框架的Client接受响应信息 
+53. MultiMessageHandler.received ();//多消息处理Handler 
+54. HeartbeatHandler.received ();//心跳处理Handler 
+55. AllChannelHandler.received ();//消息派发器Handler 
+56. DecodeHandler.received ();//编码Handler 
+57. HeaderExchangerHandler.received ();//信息交换Handler，请求-响应模式 
+58. DefaultFuture.received();//设置response到消费者请求的Future中，以供消费者通过DefaultFuture.get()取得提供者的响应，此为同步转异步重要一步，且请求超时也由DefaultFuture控制。 
+-----------------------------------4.阻塞或异步断点--------------------------------------- 
+59. Filter.invoke();//消费者异步得到响应后，DubboInvoker继续执行，从而Filter继续执行，从而返回结果给消费者。 
+60. InvokerInvocationHandler.invoker();//执行invocationHandler后续代码 
+61. testServiceProxy.hello();//消费者端Invoker代理后续代码 
+62. testServiceSub.hello();//执行后续代码 
+63. testService.hello();//执行后续代码 
+64. 呈现结果给消费者客户端 
+总结：消费者端的DubboInvoker发起请求后，后续的逻辑可以说是异步的或是指定超时时间内阻塞的，直到得到响应结果后，继续执行DubboInvoker中逻辑。对于异步请求时，消费者得到Future，其余逻辑均是异步的。以上主要核心逻辑，对于附加功能，大部分由Filter增强完成。消费者还可以通过设置async、sent、return来调整处理逻辑，async指异步还是同步请求，sent指是否等待请求消息发出即阻塞等待是否成功发出请求、return指是否忽略返回值即但方向通信，一般异步时使用以减少Future对象的创建和管理成本。

@@ -22,7 +22,8 @@ public class MyNettyClient {
 		NettyServer nettyServer = new NettyServer(serverHandler, serverURL);
 		NettyClient nettyClient = new NettyClient(clientHandler, clientURL);
 		
-		nettyClient.send("nihao i am client",true);
+		//nettyClient.send("nihao i am client",true);
+		nettyClient.getChannel().send("nihao i am client",true);
 		
 		Thread.sleep(5000);
 	}

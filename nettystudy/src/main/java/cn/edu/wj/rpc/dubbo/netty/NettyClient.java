@@ -52,8 +52,8 @@ public class NettyClient extends AbstractClient implements Client{
         bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
             public ChannelPipeline getPipeline() {
             	ChannelPipeline pipeline = Channels.pipeline();
-            	pipeline.addLast("decoder", new ObjectDecoder());
-            	pipeline.addLast("encoder", new ObjectEncoder());
+            	//pipeline.addLast("decoder", new ObjectDecoder());
+            	//pipeline.addLast("encoder", new ObjectEncoder());
             	pipeline.addLast("handler", nettyHandler);
             	return pipeline;
             }
@@ -100,7 +100,7 @@ public class NettyClient extends AbstractClient implements Client{
 	}
 
 	@Override
-	protected cn.edu.wj.rpc.dubbo.netty.Channel getChannel() {
+	public cn.edu.wj.rpc.dubbo.netty.Channel getChannel() {
 		Channel c = channel;
         if (c == null || !c.isConnected())
             return null;
