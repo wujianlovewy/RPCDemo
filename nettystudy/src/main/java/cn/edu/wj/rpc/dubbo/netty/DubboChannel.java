@@ -8,6 +8,7 @@ import org.jboss.netty.util.internal.ConcurrentHashMap;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 
+//DubboChannel 封装NettyChannel操作
 public class DubboChannel extends AbstractPeer implements Channel{
 
 	 private final org.jboss.netty.channel.Channel channel;

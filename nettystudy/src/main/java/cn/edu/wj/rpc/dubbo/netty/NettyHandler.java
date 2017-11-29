@@ -85,6 +85,8 @@ public class NettyHandler extends SimpleChannelHandler {
 	@Override
 	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
+		//调用netty底层发送请求
+		super.writeRequested(ctx, e);
 		DubboChannel channel = DubboChannel.getOrAddChannel(ctx.getChannel(), this.handler, this.getUrl());
 		try{
 			this.handler.sent(channel, e.getMessage());
