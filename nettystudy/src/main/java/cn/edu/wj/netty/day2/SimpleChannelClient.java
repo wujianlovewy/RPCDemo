@@ -28,12 +28,12 @@ public class SimpleChannelClient extends SimpleChannelHandler{
 			ChannelStateEvent e) throws Exception {
 	}
 
-	/*@Override
+	@Override
 	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
-		
+		super.writeRequested(ctx, e);
 		System.out.println(ctx.getName()+ctx.getChannel().getLocalAddress()+"_发送消息: "+e.getMessage());
-	}*/
+	}
 
 	
 	
