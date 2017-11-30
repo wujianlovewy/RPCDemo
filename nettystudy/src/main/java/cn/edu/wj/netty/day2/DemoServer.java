@@ -37,8 +37,8 @@ public class DemoServer {
 	      bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 	            public ChannelPipeline getPipeline() {
 	            	ChannelPipeline pipeline = Channels.pipeline();
-	            	pipeline.addLast("decoder", new StringDecoder());  
-	                pipeline.addLast("encoder", new StringEncoder());  
+	            	pipeline.addLast("decoder", new MyDecoder());  
+	                pipeline.addLast("encoder", new MyEncoder());  
 	                pipeline.addLast("handler", new SimpleChannelClient());  //添加一个Handler来处理客户端的事件，Handler需要继承ChannelHandler  
 	            	return pipeline;
 	            }

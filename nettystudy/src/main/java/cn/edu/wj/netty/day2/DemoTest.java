@@ -15,7 +15,8 @@ public class DemoTest {
         Scanner scanner = new Scanner(System.in);  
         while(true){  
             System.out.println("请输入");  
-            channel.write(scanner.next());  
+            Person p = new Person(19, scanner.next(), 100);
+            channel.write(p);  
         }  
 	}
 	
