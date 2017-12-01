@@ -105,7 +105,8 @@ public class FastJsonObjectInput implements ObjectInput {
 	@Override
 	public Object readObject() throws IOException, ClassNotFoundException {
 		String json = this.readLine();
-		return JSON.parse(json);
+		Object obj = JSON.parse(json);
+		return obj;
 	}
 
 	@Override

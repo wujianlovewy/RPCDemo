@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -65,9 +66,22 @@ public class FastJsonObjectOutput implements ObjectOutput {
 	}
 
 	public void writeObject(Object obj) throws IOException {
+		
+		/***
+		* 参考fastjson漏洞问题 https://www.cnblogs.com/fuyuanming/p/6626732.html
+		* 解决办法 http://blog.csdn.net/cdyjy_litao/article/details/72458538
+		**/
+		//ParserConfig.getGlobalInstance().addAccept("cn.edu.wj"); //添加autotype白名单
+		
+		ParserConfig.getGlobalInstance().setAutoTypeSupport(true); 
 		SerializeWriter out = new SerializeWriter();
 		JSONSerializer serializer = new JSONSerializer(out);
 		serializer.config(SerializerFeature.WriteEnumUsingToString, true);
+		serializer.config(SerializerFeature.SortField, true);
+        serializer.config(SerializerFeature.WriteClassName, true);
+        serializer.config(SerializerFeature.WriteDateUseDateFormat, true);
+        serializer.config(SerializerFeature.WriteNullStringAsEmpty, true);
+        serializer.config(SerializerFeature.WriteNullListAsEmpty, true);
 		serializer.write(obj);
 		out.writeTo(writer);
 		out.close(); // for reuse SerializeWriter buf
