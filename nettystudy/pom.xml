@@ -34,6 +34,13 @@
 			<artifactId>zkclient</artifactId>
 			<version>0.4</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <scope>provided</scope>
+            <version>1.2.31</version>
+        </dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
