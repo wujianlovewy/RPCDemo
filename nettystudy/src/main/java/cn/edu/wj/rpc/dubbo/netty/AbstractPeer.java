@@ -2,6 +2,10 @@ package cn.edu.wj.rpc.dubbo.netty;
 
 import java.net.InetSocketAddress;
 
+import cn.edu.wj.rpc.dubbo.common.support.FastJsonSerialization;
+import cn.edu.wj.rpc.dubbo.remoting.api.Codec2;
+import cn.edu.wj.rpc.dubbo.remoting.api.TransportCodec;
+
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.NetUtils;
 
@@ -14,10 +18,19 @@ public abstract class AbstractPeer implements Channel,ChannelHandler,EndPoint{
 	// closing closed分别表示关闭流程中、完成关闭
     private volatile boolean closing;
     private volatile boolean closed;
+    
+    //序列化方式
+    private Codec2 codec;
 	
 	AbstractPeer(ChannelHandler handler, URL url){
 		this.handler = handler;
 		this.url = url;
+		//实例化具体序列化方式
+		this.codec = getChannelCodec(url);
+	}
+	
+	protected static Codec2 getChannelCodec(URL url){
+		return new TransportCodec();
 	}
 	
 	public InetSocketAddress getConnectAddress() {
@@ -77,5 +90,9 @@ public abstract class AbstractPeer implements Channel,ChannelHandler,EndPoint{
 	public void setUrl(URL url) {
 		this.url = url;
 	}
-	 
+
+	public Codec2 getCodec() {
+		return codec;
+	}
+	
 }

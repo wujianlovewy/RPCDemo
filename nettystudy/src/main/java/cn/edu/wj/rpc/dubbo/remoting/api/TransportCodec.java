@@ -22,7 +22,7 @@ public class TransportCodec extends AbstractCodec{
 	public void encode(Channel channel, ChannelBuffer buffer, Object message) throws IOException{
 		OutputStream output = new ChannelBufferOutputStream(buffer);
 		ObjectOutput objectOutput = getSerialization(channel).serialize(channel.getUrl(), output);
-		this.encode(channel, buffer, message);
+		this.encodeData(objectOutput, message);
 		objectOutput.flushBuffer();
 	} 
 	
@@ -35,7 +35,7 @@ public class TransportCodec extends AbstractCodec{
 	}
 	
 	protected Object decodeData(Channel channel, ObjectInput objectInput) throws IOException{
-		return decodeData(channel,objectInput);
+		return decodeData(objectInput);
 	}
 	
 	protected Object decodeData(ObjectInput objectInput) throws IOException{

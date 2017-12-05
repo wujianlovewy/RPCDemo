@@ -26,7 +26,7 @@ public class MyNettyClient {
 		//nettyClient.getChannel().send("nihao i am client",true);
 		nettyServer.send("hi i'am server");
 		
-		Thread.sleep(5000);
+		Thread.sleep(500000);
 	}
 	
 	 static class MyHandler implements ChannelHandler {

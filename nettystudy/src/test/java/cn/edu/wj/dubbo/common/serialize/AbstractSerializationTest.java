@@ -13,12 +13,12 @@ import org.junit.Test;
 import cn.edu.wj.dubbo.common.serialize.model.BigPerson;
 import cn.edu.wj.dubbo.common.serialize.model.PersonInfo;
 import cn.edu.wj.dubbo.common.serialize.model.PersonStatus;
+import cn.edu.wj.netty.day2.Person;
 import cn.edu.wj.rpc.dubbo.common.ObjectInput;
 import cn.edu.wj.rpc.dubbo.common.ObjectOutput;
 import cn.edu.wj.rpc.dubbo.common.Serialization;
 
 import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.model.Person;
 
 public abstract class AbstractSerializationTest {
 
