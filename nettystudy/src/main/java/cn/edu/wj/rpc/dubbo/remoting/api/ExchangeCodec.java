@@ -100,7 +100,7 @@ public class ExchangeCodec extends TransportCodec {
     	Serialization serialization = CodecSupport.getSerialization(channel.getUrl(), proto);
     	ObjectInput in = serialization.deserialize(channel.getUrl(), is);
 
-    	long id = Bytes.bytes2int(header, 4);
+    	long id = Bytes.bytes2long(header, 4);
     	
     	if((flag & FLAG_REQUEST)==0){
     		// decode response.

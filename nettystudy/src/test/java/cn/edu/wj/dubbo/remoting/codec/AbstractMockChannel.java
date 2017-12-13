@@ -89,11 +89,6 @@ public class AbstractMockChannel implements Channel {
         isClosed = true;
     }
 
-    @Override
-    public void startClose() {
-        closing = true;
-    }
-
     public boolean isClosed() {
         return isClosed;
     }

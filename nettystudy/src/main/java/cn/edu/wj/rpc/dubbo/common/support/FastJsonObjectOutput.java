@@ -79,8 +79,8 @@ public class FastJsonObjectOutput implements ObjectOutput {
 		serializer.config(SerializerFeature.WriteEnumUsingToString, true);
 		serializer.config(SerializerFeature.SortField, true);
         serializer.config(SerializerFeature.WriteClassName, true);
-        serializer.config(SerializerFeature.WriteDateUseDateFormat, true);
-        serializer.config(SerializerFeature.WriteNullStringAsEmpty, true);
+        //serializer.config(SerializerFeature.WriteDateUseDateFormat, true);
+        //serializer.config(SerializerFeature.WriteNullStringAsEmpty, true);
         serializer.config(SerializerFeature.WriteNullListAsEmpty, true);
 		serializer.write(obj);
 		out.writeTo(writer);

@@ -11,4 +11,8 @@ public class CodecSupport {
 		return new FastJsonSerialization();
 	}
 	
+	public static Serialization getSerialization(URL url, Byte id){
+		return new FastJsonSerialization();
+	}
+	
 }

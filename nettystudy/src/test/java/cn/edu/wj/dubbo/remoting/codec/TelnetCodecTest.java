@@ -110,7 +110,17 @@ public class TelnetCodecTest {
     protected void testDecode_assertEquals(byte[] request, Object ret) throws IOException {
         testDecode_assertEquals(request, ret, true);
     }
+    
+    protected void testDecode_assertEquals(byte[] request, Object ret, boolean isServerside) throws IOException {
+        //init channel
+        Channel channel = isServerside ? getServerSideChannel(url) : getCliendSideChannel(url);
+        //init request string
+        ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(request);
 
+        //decode
+        Object obj = codec.decode(channel, buffer);
+        Assert.assertEquals(ret, obj);
+    }
 
     protected void testDecode_assertEquals(Object request, Object ret) throws IOException {
         testDecode_assertEquals(request, ret, null);
