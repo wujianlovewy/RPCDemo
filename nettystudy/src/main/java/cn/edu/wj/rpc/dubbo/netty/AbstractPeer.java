@@ -9,7 +9,7 @@ import cn.edu.wj.rpc.dubbo.remoting.api.TransportCodec;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.NetUtils;
 
-public abstract class AbstractPeer implements Channel,ChannelHandler,EndPoint{
+public abstract class AbstractPeer implements ChannelHandler,EndPoint{
 
 	private final ChannelHandler handler;
 	

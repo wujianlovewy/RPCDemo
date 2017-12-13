@@ -39,4 +39,14 @@ public abstract class AbstractServer extends AbstractPeer {
 	 
 	 protected abstract void doOpen() throws Throwable;
 
+	@Override
+	public InetSocketAddress getLocalAddress() {
+		return null;
+	}
+
+	@Override
+	public void close(int timeout) {
+		
+	}
+
 }

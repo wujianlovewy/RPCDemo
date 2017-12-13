@@ -1,5 +1,7 @@
 package cn.edu.wj.rpc.dubbo.netty;
 
+import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import org.jboss.netty.channel.ChannelFuture;
@@ -17,6 +19,9 @@ public class DubboChannel extends AbstractPeer implements Channel{
 	 
 	 //映射netty channel与dubbo channel的关系
 	 private static final ConcurrentMap<org.jboss.netty.channel.Channel, DubboChannel> channelMap = new ConcurrentHashMap<>();
+	 
+	 //属性存储对象
+	 private final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>(); 
 	 
 	 DubboChannel(org.jboss.netty.channel.Channel channel, ChannelHandler handler, URL url){
 		 super(handler, url);
@@ -80,4 +85,45 @@ public class DubboChannel extends AbstractPeer implements Channel{
 		}
 		
 	}
+
+	@Override
+	public void removeAttribute(String key) {
+		this.attributes.remove(key);
+	}
+
+	@Override
+	public void close(int timeout) {
+	}
+	
+	
+	
+	@Override
+	public InetSocketAddress getRemoteAddress() {
+		return (InetSocketAddress)this.channel.getRemoteAddress();
+	}
+	
+	@Override
+	public InetSocketAddress getLocalAddress() {
+		return (InetSocketAddress)this.channel.getLocalAddress();
+	}
+
+	@Override
+	public boolean hasAttribute(String key) {
+		return attributes.containsKey(key); 
+	}
+
+	@Override
+	public Object getAttribute(String key) {
+		return attributes.get(key);
+	}
+
+	@Override
+	public void setAttribute(String key, Object value) {
+		if(value==null){ //The null value unallowed in the ConcurrentHashMap.
+			this.attributes.remove(key);
+		}else{
+			this.attributes.put(key, value);
+		}
+	}
+
 }

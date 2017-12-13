@@ -20,7 +20,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.NamedThreadFactory;
 
-public class NettyClient extends AbstractClient implements Client{
+public class NettyClient extends AbstractClient{
 
 	// 因ChannelFactory的关闭有DirectMemory泄露，采用静态化规避
     // https://issues.jboss.org/browse/NETTY-424

@@ -59,9 +59,4 @@ public class NettyServer extends AbstractServer implements Server{
 	      channel = bootstrap.bind(getBindAddress());
 	}
 
-	@Override
-	public boolean isConnected() {
-		return false;
-	}
-
 }
