@@ -58,6 +58,7 @@ final public class HeartBeatTask implements Runnable {
 							try {
 								((Client) channel).reconnect();
 							} catch (Exception e) {
+								// do nothing
 							}
 						}else{
 							System.out.println("Close Server channel " + channel

@@ -29,6 +29,13 @@ public abstract class AbstractPeer implements ChannelHandler,EndPoint{
 		this.codec = getChannelCodec(url);
 	}
 	
+	@Override
+	public ChannelHandler getChannelHandler() {
+		return handler;
+	}
+
+
+
 	protected static Codec2 getChannelCodec(URL url){
 		return new TransportCodec();
 	}

@@ -27,5 +27,7 @@ public interface EndPoint {
      * Graceful close the channel.
      */
     void close(int timeout);
+    
+    ChannelHandler getChannelHandler();
 	
 }

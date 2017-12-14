@@ -1,5 +1,8 @@
 package cn.edu.wj.rpc.dubbo.netty;
 
+import java.net.InetSocketAddress;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,14 +13,11 @@ import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.jboss.netty.handler.codec.serialization.ObjectDecoder;
-import org.jboss.netty.handler.codec.serialization.ObjectEncoder;
-import org.jboss.netty.handler.codec.string.StringDecoder;
-import org.jboss.netty.handler.codec.string.StringEncoder;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.NamedThreadFactory;
+import com.alibaba.dubbo.common.utils.NetUtils;
 
 public class NettyServer extends AbstractServer implements Server{
 
@@ -57,6 +57,29 @@ public class NettyServer extends AbstractServer implements Server{
 	      
 	      //bind
 	      channel = bootstrap.bind(getBindAddress());
+	}
+
+	@Override
+	public Collection<Channel> getChannels() {
+		Collection<Channel> chs = new HashSet<Channel>();
+		for(Channel channel : this.channels.values()){
+			if(channel.isConnected()){
+				chs.add(channel);
+			}else{
+				this.channels.remove(NetUtils.toAddressString(channel.getRemoteAddress())); 
+			}
+		}
+		return chs;
+	}
+
+	@Override
+	public Channel getChannel(InetSocketAddress remoteAddress) {
+		return this.channels.get(NetUtils.toAddressString(remoteAddress)); 
+	}
+
+	@Override
+	public boolean isBound() {
+		return channel.isBound();
 	}
 
 }

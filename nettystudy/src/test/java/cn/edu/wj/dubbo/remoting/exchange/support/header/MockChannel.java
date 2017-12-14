@@ -10,6 +10,7 @@ import java.util.Map;
 import com.alibaba.dubbo.common.URL;
 
 import cn.edu.wj.rpc.dubbo.netty.Channel;
+import cn.edu.wj.rpc.dubbo.netty.ChannelHandler;
 
 public class MockChannel implements Channel {
 
@@ -86,6 +87,11 @@ public class MockChannel implements Channel {
 
 	public List<Object> getSentObjects() {
 		return Collections.unmodifiableList(this.sentObjects);
+	}
+
+	@Override
+	public ChannelHandler getChannelHandler() {
+		return null;
 	}
 	
 }
