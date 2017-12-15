@@ -12,6 +12,12 @@ import cn.edu.wj.rpc.dubbo.remoting.exchange.support.Replier;
 
 import com.alibaba.dubbo.remoting.RemotingException;
 
+/**
+ * @author jwu
+ * 参考 ： Dubbo源码分析   http://blog.csdn.net/lang_man_xing/article/details/51459685
+ *	http://blog.csdn.net/joeyon1985/article/details/51046599
+ *	http://blog.csdn.net/pentiumchen/article/details/53227844
+ */
 public abstract class ClientToServerTest extends TestCase{
 
 	 protected static final String LOCALHOST = "127.0.0.1";

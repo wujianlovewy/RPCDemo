@@ -35,7 +35,7 @@ public class NettyClientToServerTest extends ClientToServerTest {
     }
 
     protected ExchangeChannel newClient(int port) throws Exception {
-        return Exchangers.connect(URL.valueOf("exchange://localhost:" + port + "?client=netty&timeout=5000"));
+        return Exchangers.connect(URL.valueOf("exchange://localhost:" + port + "?client=netty&timeout=500000"));
     }
 
 }
