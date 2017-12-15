@@ -6,4 +6,5 @@ public interface Exchanger {
 
 	ExchangeServer bind(URL url, ExchangeHandler exchangeHandler) throws Exception;
 	
+	ExchangeClient connect(URL url, ExchangeHandler exchangeHandler) throws Exception;
 }

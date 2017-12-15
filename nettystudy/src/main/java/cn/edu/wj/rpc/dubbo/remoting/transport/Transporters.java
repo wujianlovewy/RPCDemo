@@ -1,8 +1,10 @@
 package cn.edu.wj.rpc.dubbo.remoting.transport;
 
 import cn.edu.wj.rpc.dubbo.netty.ChannelHandler;
+import cn.edu.wj.rpc.dubbo.netty.Client;
 import cn.edu.wj.rpc.dubbo.netty.Server;
 import cn.edu.wj.rpc.dubbo.remoting.Transporter;
+import cn.edu.wj.rpc.dubbo.remoting.transport.netty.NettyTransporter;
 
 import com.alibaba.dubbo.common.URL;
 
@@ -26,8 +28,26 @@ public class Transporters {
 		return getTransporter().bind(url, channelHandler);
 	}
 	
+	public static Client connect(URL url, ChannelHandler... handlers) throws Exception {
+		if (url == null) { 
+			throw new IllegalArgumentException("url == null");
+		}
+		if (handlers == null || handlers.length == 0) {
+			throw new IllegalArgumentException("handlers == null");
+		}
+		
+		ChannelHandler channelHandler = null;
+		if(handlers.length==1){
+			channelHandler = handlers[0];
+		}else{
+			channelHandler = new ChannelHandlerDispatcher(handlers);
+		}
+		
+		return getTransporter().connect(url, channelHandler);
+	}
+	
 	public static Transporter getTransporter(){
-		return null;
+		return new NettyTransporter();
 	}
 	
 	

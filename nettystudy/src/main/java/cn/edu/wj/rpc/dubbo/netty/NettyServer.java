@@ -19,7 +19,7 @@ import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.utils.NamedThreadFactory;
 import com.alibaba.dubbo.common.utils.NetUtils;
 
-public class NettyServer extends AbstractServer implements Server{
+public class NettyServer extends AbstractServer{
 
    private Map<String, Channel> channels; // <ip:port, channel>
 
@@ -27,7 +27,7 @@ public class NettyServer extends AbstractServer implements Server{
 
     private org.jboss.netty.channel.Channel channel;
 	
-	public NettyServer(ChannelHandler handler, URL url) throws Throwable {
+	public NettyServer(ChannelHandler handler, URL url) throws Exception {
 		super(handler, url);
 	}
 

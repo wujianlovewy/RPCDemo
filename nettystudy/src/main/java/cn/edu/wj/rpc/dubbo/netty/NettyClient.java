@@ -33,13 +33,13 @@ public class NettyClient extends AbstractClient{
     
     private static final int TIME_OUT = 100000;
 	
-	public NettyClient(ChannelHandler channelHandler, URL url) throws Throwable{
+	public NettyClient(ChannelHandler channelHandler, URL url) throws Exception{
 		//调用父类
 		super(channelHandler, url);
 	}
     
     //netty连接初始化
-	protected void doOpen() throws Throwable {
+	protected void doOpen() throws Exception {
 		bootstrap = new ClientBootstrap(channelFactory);
         // config
         // @see org.jboss.netty.channel.socket.SocketChannelConfig
@@ -62,7 +62,7 @@ public class NettyClient extends AbstractClient{
 	 }
 
 	@Override
-	protected void doConnect() throws Throwable {
+	protected void doConnect() throws Exception {
 	     ChannelFuture future = bootstrap.connect(getConnectAddress());
 	     try {
 	    	 boolean ret = future.awaitUninterruptibly(5*1000, TimeUnit.MILLISECONDS);
@@ -93,9 +93,9 @@ public class NettyClient extends AbstractClient{
 	             }
 	             
 	    	 }else{
-	    		 throw new Throwable("client Fail connect to Server");
+	    		 throw new Exception("client Fail connect to Server");
 	    	 }
-	     } catch(Throwable t){
+	     } catch(Exception t){
 	    	 throw t;
 	     }
 	}

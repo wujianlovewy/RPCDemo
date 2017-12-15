@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 
 import cn.edu.wj.rpc.dubbo.common.support.FastJsonSerialization;
 import cn.edu.wj.rpc.dubbo.remoting.api.Codec2;
+import cn.edu.wj.rpc.dubbo.remoting.api.ExchangeCodec;
 import cn.edu.wj.rpc.dubbo.remoting.api.TransportCodec;
 
 import com.alibaba.dubbo.common.URL;
@@ -37,7 +38,7 @@ public abstract class AbstractPeer implements ChannelHandler,EndPoint{
 
 
 	protected static Codec2 getChannelCodec(URL url){
-		return new TransportCodec();
+		return new ExchangeCodec();
 	}
 	
 	public InetSocketAddress getConnectAddress() {
@@ -82,7 +83,7 @@ public abstract class AbstractPeer implements ChannelHandler,EndPoint{
 		if(closed){
 			return;
 		}
-		this.handler.sent(channel, message);
+		this.handler.received(channel, message);
 	}
 
 	@Override

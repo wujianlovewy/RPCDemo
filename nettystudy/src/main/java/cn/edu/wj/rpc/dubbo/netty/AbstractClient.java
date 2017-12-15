@@ -6,13 +6,13 @@ import com.alibaba.dubbo.common.URL;
 
 public abstract class AbstractClient extends AbstractPeer implements Client {
 
-	AbstractClient(ChannelHandler handler, URL url) throws Throwable {
+	AbstractClient(ChannelHandler handler, URL url) throws Exception {
 		super(handler, url);
 
 		// 调用子类初始化
 		try {
 			this.doOpen();
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			close();
 			throw t;
 		}
@@ -25,7 +25,7 @@ public abstract class AbstractClient extends AbstractPeer implements Client {
 		}
 	}
 
-	protected void connect() throws Throwable {
+	protected void connect() throws Exception {
 		try {
 			if (isConnected()) {
 				return;
@@ -36,7 +36,7 @@ public abstract class AbstractClient extends AbstractPeer implements Client {
 			} else {
 				System.out.println("Successed connect to server");
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw e;
 		}
 	}
@@ -99,7 +99,7 @@ public abstract class AbstractClient extends AbstractPeer implements Client {
 
 	abstract Channel getChannel();
 
-	abstract void doOpen() throws Throwable;
+	abstract void doOpen() throws Exception;
 
-	abstract void doConnect() throws Throwable;
+	abstract void doConnect() throws Exception;
 }

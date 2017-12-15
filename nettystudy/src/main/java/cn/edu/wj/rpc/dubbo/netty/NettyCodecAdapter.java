@@ -56,7 +56,7 @@ public final class NettyCodecAdapter {
 			}finally{
 				DubboChannel.removeChannelIfDisconnected(channel);
 			}
-			return ChannelBuffers.wrappedBuffer(buffer.array());
+			return ChannelBuffers.wrappedBuffer(buffer.toByteBuffer()); // bug--buffer.array()导致发序列化异常
 		}
 	}
 	

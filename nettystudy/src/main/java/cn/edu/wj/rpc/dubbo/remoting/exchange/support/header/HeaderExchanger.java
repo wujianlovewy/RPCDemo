@@ -1,5 +1,6 @@
 package cn.edu.wj.rpc.dubbo.remoting.exchange.support.header;
 
+import cn.edu.wj.rpc.dubbo.remoting.exchange.ExchangeClient;
 import cn.edu.wj.rpc.dubbo.remoting.exchange.ExchangeHandler;
 import cn.edu.wj.rpc.dubbo.remoting.exchange.ExchangeServer;
 import cn.edu.wj.rpc.dubbo.remoting.exchange.Exchanger;
@@ -14,7 +15,13 @@ public class HeaderExchanger implements Exchanger {
 	@Override
 	public ExchangeServer bind(URL url, ExchangeHandler handler)
 			throws Exception {
-		return new HeaderExchangeServer(Transporters.bind(url, new HeaderExchangeHandler(handler)));  
+			return new HeaderExchangeServer(Transporters.bind(url, new HeaderExchangeHandler(handler)));
+	}
+
+	@Override
+	public ExchangeClient connect(URL url, ExchangeHandler handler)
+			throws Exception {
+		return new HeaderExchangeClient(Transporters.connect(url, new HeaderExchangeHandler(handler)), false);
 	}
 
 }

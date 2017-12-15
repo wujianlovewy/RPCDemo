@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.alibaba.dubbo.common.URL;
 
-import cn.edu.wj.dubbo.remoting.exchange.support.header.HeaderExchangeChannel;
 import cn.edu.wj.rpc.dubbo.netty.Channel;
 import cn.edu.wj.rpc.dubbo.netty.ChannelHandler;
 import cn.edu.wj.rpc.dubbo.netty.Server;

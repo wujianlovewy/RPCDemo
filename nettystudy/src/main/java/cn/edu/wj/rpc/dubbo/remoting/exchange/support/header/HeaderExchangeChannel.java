@@ -1,4 +1,4 @@
-package cn.edu.wj.dubbo.remoting.exchange.support.header;
+package cn.edu.wj.rpc.dubbo.remoting.exchange.support.header;
 
 import java.net.InetSocketAddress;
 
@@ -11,6 +11,7 @@ import cn.edu.wj.rpc.dubbo.remoting.exchange.ExchangeHandler;
 import cn.edu.wj.rpc.dubbo.remoting.exchange.Request;
 import cn.edu.wj.rpc.dubbo.remoting.exchange.Response;
 import cn.edu.wj.rpc.dubbo.remoting.exchange.ResponseFuture;
+import cn.edu.wj.rpc.dubbo.remoting.exchange.support.DefaultFuture;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
@@ -49,6 +50,55 @@ public final class HeaderExchangeChannel implements ExchangeChannel {
 			 ch.removeAttribute(CHANNEL_KEY);
 		 }
 	 }
+	 
+	@Override
+	public void send(Object message) throws Throwable {
+		this.send(message, this.getUrl().getParameter(Constants.SENT_KEY, false));
+	}
+
+	@Override
+	public void send(Object message, boolean sent) throws Throwable {
+		if(closed){
+			throw new Exception(this.getRemoteAddress() + "Failed to send message " + message + ", cause: The channel " + this + " is closed!");
+		}
+		
+		if(message instanceof Request
+				|| message instanceof Response
+				|| message instanceof String){
+			this.channel.send(message, sent);
+		}else{
+			Request request = new Request();
+			request.setTwoWay(false);
+			request.setVersion("2.0.0");
+			request.setData(message);
+			this.channel.send(request);
+		}
+	}
+
+	@Override
+	public ResponseFuture request(Object request) throws Exception {
+		return this.request(request, getUrl().getPositiveParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT)); 
+	} 
+
+	@Override
+	public ResponseFuture request(Object request, int timeout) throws Exception {
+		if(closed){
+			throw new Exception(this.getRemoteAddress() + "Failed to send request " + request + ", cause: The channel " + this + " is closed!");
+		}
+		
+		Request req = new Request();
+		req.setVersion("2.0.0");
+        req.setTwoWay(true);
+        req.setData(request);
+        DefaultFuture future = new DefaultFuture(channel, req, timeout);
+        try{
+        	this.channel.send(req);
+        }catch(Throwable e){
+        	future.cancel();
+        	throw new Exception(e);
+        }
+		return future;
+	}
 
 	@Override
 	public InetSocketAddress getRemoteAddress() {
@@ -109,40 +159,6 @@ public final class HeaderExchangeChannel implements ExchangeChannel {
 
 	}
 	
-	@Override
-	public void send(Object message) throws Throwable {
-		this.send(message, this.getUrl().getParameter(Constants.SENT_KEY, false));
-	}
-
-	@Override
-	public void send(Object message, boolean sent) throws Throwable {
-		if(closed){
-			throw new Exception(this.getRemoteAddress() + "Failed to send message " + message + ", cause: The channel " + this + " is closed!");
-		}
-		
-		if(message instanceof Request
-				|| message instanceof Response
-				|| message instanceof String){
-			this.channel.send(message, sent);
-		}else{
-			Request request = new Request();
-			request.setTwoWay(false);
-			request.setVersion("2.0.0");
-			request.setData(message);
-			this.channel.send(request);
-		}
-	}
-
-	@Override
-	public ResponseFuture request(Object request) throws Exception {
-		return this.request(request, getUrl().getPositiveParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT)); 
-	}
-
-	@Override
-	public ResponseFuture request(Object request, int timeout) throws Exception {
-		return null;
-	}
-
 	@Override
 	public ExchangeHandler getExchangeHandler() {
 		return (ExchangeHandler)channel.getChannelHandler();
