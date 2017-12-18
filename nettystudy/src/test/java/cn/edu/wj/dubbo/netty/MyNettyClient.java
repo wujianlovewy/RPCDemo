@@ -71,7 +71,7 @@ public class MyNettyClient {
 	        }
 
 	        public void received(Channel channel, Object message) throws RemotingException {
-	            output("received");
+	            output("received: "+message);
 	            checkThreadName();
 	        }
 

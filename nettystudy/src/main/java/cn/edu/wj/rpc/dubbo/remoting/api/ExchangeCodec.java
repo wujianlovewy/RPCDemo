@@ -34,7 +34,7 @@ import com.alibaba.dubbo.remoting.buffer.ChannelBufferOutputStream;
 	4-11 id (long)
 	12 -15 datalength
  */
-public class ExchangeCodec extends TransportCodec {
+public class ExchangeCodec extends TelnetCodec {
 	
 	 // header length.
     protected static final int HEADER_LENGTH = 16;
@@ -66,6 +66,17 @@ public class ExchangeCodec extends TransportCodec {
 	}
     
     protected Object decode(Channel channel, ChannelBuffer buffer, int readable, byte[] header) throws IOException{
+    	
+    	//校验magic code
+    	if(readable>0 && header[0]!=MAGIC_HIGH 
+    			|| readable>1 && header[1]!=MAGIC_LOW){
+    		int length = header.length;
+    		if(header.length < readable){
+    			header = Bytes.copyOf(header, readable);
+    			buffer.readBytes(header, length, readable-length);
+    		}
+    		return super.decode(channel, buffer, readable, header);
+    	}
     	
     	if(readable < HEADER_LENGTH){
     		return DecodeResult.NEED_MORE_INPUT;
