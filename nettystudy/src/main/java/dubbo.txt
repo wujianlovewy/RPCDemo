@@ -27,7 +27,7 @@ ii. 在提供者与消费者端都初始化完毕时，提供者对外暴露的�
 22. AllChannelHandler.send();//消息派发器Handler 
 23. DecodeHandler.send();//编码Handler 
 24. HeaderExchangerHandler.send();//信息交换Handler 
-25. requestHandler父类ChannelHandlerAdapter.send();//最后执行Handler，以上Handler的执行在消费者端是没有意义，因为Channel.write ()执行时，提供者端已经收到消息了，也正在处理了，详细逻辑后面再说，这里为了完整性才这样写（以上是消费者请求大致过程，下面是提供者接受请求后处理并响应消费者过程）。 
+25. requestHandler父类ChannelHandlerAdapter.send();//最后执行Handler，以上Handler的执行在消费者端是没有意义，因为super.writeRequested()执行时，提供者端已经收到消息了，也正在处理了，详细逻辑后面再说，这里为了完整性才这样写（以上是消费者请求大致过程，下面是提供者接受请求后处理并响应消费者过程）。 
 ------------------------------2.提供者处理并响应请求-------------------------------------- 
 26. NettyCodecAdapter.messageReceived();//提供者通过NIO框架通信并接受到消费者发送的信息，当然，这里屏蔽了所有NIO框架的逻辑，也屏蔽了所有编码解码与序列化反序列化的逻辑 
 27. NettyHandler.messageReceived();//提供者端的NIO顶级Handler处理 
@@ -52,7 +52,8 @@ ii. 在提供者与消费者端都初始化完毕时，提供者对外暴露的�
 46. AllChannelHandler.send();//消息派发器Handler 
 47. DecodeHandler.send();//编码Handler 
 48. HeaderExchangerHandler.send();//信息交换Handler 
-49. requestHandler父类ChannelHandlerAdapter.send();//最后执行Handler，以上Handler的执行在提供者端也是是没有意义，因为Channel.write ()执行时，消费者端已经收到响应消息了，也正在处理了，详细逻辑后面再说，这里为了完整性才这样写（以上是消费者请求与提供者接受请求并响应大致过程，下面是消费者接受到提供者响应后处理过程）。 
+49. requestHandler父类ChannelHandlerAdapter.send();
+//最后执行Handler，以上Handler的执行在提供者端也是是没有意义，因为super.writeRequested()执行时，消费者端已经收到响应消息了，也正在处理了，详细逻辑后面再说，这里为了完整性才这样写（以上是消费者请求与提供者接受请求并响应大致过程，下面是消费者接受到提供者响应后处理过程）。 
 ----------------------------------3.消费者接受响应------------------------------------------ 
 50. NettyCodecAdapter.messageReceived();//提供者通过NIO框架通信并接受提供者发送过来的响应 
 51. NettyHandler.messageReceived();//消费者端的NIO顶级Handler处理 
